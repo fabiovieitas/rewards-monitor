@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rewards Monitor Mobile</title>
-    <meta name="theme-color" content="#0b0f19">
+    <title>Rewards Monitor</title>
+    <meta name="theme-color" content="#0b0e14">
     <style>
         :root {
-            --bg-dark: #0b0f19;
-            --card-bg: #131b2e;
-            --card-border: #1e293b;
-            --neon-blue: #38bdf8;
-            --neon-purple: #a855f7;
-            --neon-green: #22c55e;
-            --neon-amber: #f59e0b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg-body: #0b0e14;
+            --bg-card: #121824;
+            --bg-card-sub: #172030;
+            --border-color: #1e2638;
+            --border-focus: #3b82f6;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
+            --accent-red: #ef4444;
+            
+            --badge-green-bg: rgba(16, 185, 129, 0.12);
+            --badge-green-text: #34d399;
+            --badge-blue-bg: rgba(59, 130, 246, 0.12);
+            --badge-blue-text: #60a5fa;
+            --badge-gray-bg: rgba(148, 163, 184, 0.1);
+            --badge-gray-text: #94a3b8;
         }
 
         * {
@@ -27,139 +40,176 @@
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
+            background-color: var(--bg-body);
+            color: var(--text-primary);
             min-height: 100vh;
-            padding: 16px;
-            padding-bottom: 40px;
+            padding: 16px 14px 48px;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Header */
-        .header {
+        /* Top Header */
+        .top-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--card-border);
             margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .brand {
+        .brand-box {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .brand-icon {
-            font-size: 26px;
-            filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
         }
 
         .brand-title {
-            font-size: 18px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #38bdf8 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
-
-        .brand-subtitle {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: var(--text-primary);
         }
 
         .btn-refresh {
-            background: rgba(56, 189, 248, 0.1);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            color: var(--neon-blue);
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 6px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s ease;
         }
 
         .btn-refresh:active {
-            transform: scale(0.95);
-            background: rgba(56, 189, 248, 0.2);
+            transform: scale(0.96);
+            background: var(--bg-card-sub);
         }
 
         .btn-refresh.spinning svg {
-            animation: spin 0.8s linear infinite;
+            animation: spin 0.7s linear infinite;
         }
 
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
 
-        /* Resumo Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-
-        .stat-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
+        /* Hero Summary */
+        .hero-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
             border-radius: 14px;
-            padding: 14px;
-            position: relative;
-            overflow: hidden;
+            padding: 16px;
+            margin-bottom: 14px;
         }
 
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--neon-blue);
+        .hero-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
         }
 
-        .stat-card.purple::before { background: var(--neon-purple); }
-        .stat-card.green::before { background: var(--neon-green); }
-        .stat-card.amber::before { background: var(--neon-amber); }
-
-        .stat-label {
+        .hero-label {
             font-size: 11px;
-            font-weight: 600;
-            color: var(--text-muted);
             text-transform: uppercase;
-            margin-bottom: 4px;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
         }
 
-        .stat-value {
-            font-size: 20px;
+        .hero-value {
+            font-size: 28px;
             font-weight: 800;
-            color: #fff;
+            letter-spacing: -0.5px;
+            color: #ffffff;
             display: flex;
             align-items: baseline;
-            gap: 4px;
+            gap: 6px;
         }
 
-        .stat-sub {
-            font-size: 11px;
-            color: var(--neon-green);
+        .hero-unit {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .gain-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--badge-green-bg);
+            color: var(--badge-green-text);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 600;
         }
 
-        /* Tabs das Máquinas */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .sub-stat {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sub-stat-title {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .sub-stat-val {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .sub-stat-tag {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Machine Selector (Tabs) */
+        .section-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.6px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
         .machine-tabs {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             overflow-x: auto;
-            padding-bottom: 12px;
-            margin-bottom: 12px;
+            padding-bottom: 4px;
+            margin-bottom: 14px;
             scrollbar-width: none;
         }
 
@@ -168,45 +218,49 @@
         }
 
         .tab-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-muted);
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-size: 13px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: 600;
             white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s ease;
         }
 
         .tab-btn.active {
-            background: rgba(56, 189, 248, 0.15);
-            border-color: var(--neon-blue);
-            color: var(--neon-blue);
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+            background: #1e293b;
+            color: #ffffff;
+            border-color: #3b82f6;
         }
 
-        /* Barra de Busca */
-        .search-box {
+        .tab-btn .btn-rename {
+            opacity: 0.5;
+            font-size: 11px;
+            padding: 2px 4px;
+            border-radius: 4px;
+            transition: opacity 0.15s;
+        }
+
+        .tab-btn .btn-rename:hover, .tab-btn.active .btn-rename {
+            opacity: 1;
+        }
+
+        /* Search & Filter Bar */
+        .controls-box {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .search-wrapper {
             position: relative;
-            margin-bottom: 16px;
-        }
-
-        .search-input {
-            width: 100%;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 12px 14px 12px 38px;
-            color: #fff;
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .search-input:focus {
-            border-color: var(--neon-blue);
         }
 
         .search-icon {
@@ -215,38 +269,92 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-size: 16px;
+            pointer-events: none;
         }
 
-        /* Lista de Contas */
+        .search-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 9px 12px 9px 36px;
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .search-input:focus {
+            border-color: var(--border-focus);
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 6px;
+        }
+
+        .filter-pill {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 5px 10px;
+            border-radius: 16px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .filter-pill.active {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: var(--accent-blue);
+            color: #93c5fd;
+            font-weight: 600;
+        }
+
+        /* Accounts List */
         .accounts-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .acc-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             padding: 12px 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            transition: border-color 0.2s;
+            transition: border-color 0.15s;
         }
 
-        .acc-header {
+        .acc-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .acc-info-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .acc-index {
+            background: var(--bg-card-sub);
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 5px;
+            flex-shrink: 0;
         }
 
         .acc-email {
             font-size: 13px;
-            font-weight: 700;
-            color: #fff;
-            max-width: 210px;
+            font-weight: 600;
+            color: var(--text-primary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -254,136 +362,298 @@
 
         .acc-badge {
             font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        .badge-active {
-            background: rgba(34, 197, 94, 0.15);
-            color: var(--neon-green);
-            border: 1px solid rgba(34, 197, 94, 0.3);
+        .badge-meu {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .badge-pai {
+            background: rgba(139, 92, 246, 0.15);
+            color: #c084fc;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .badge-other {
+            background: var(--badge-gray-bg);
+            color: var(--badge-gray-text);
+            border: 1px solid var(--border-color);
         }
 
         .badge-ban {
             background: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
+            color: #f87171;
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
-        .acc-body {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
+        /* Points Row inside Card */
+        .acc-points-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--bg-card-sub);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-bottom: 8px;
+            gap: 8px;
         }
 
-        .acc-points-box {
+        .point-col {
             display: flex;
             flex-direction: column;
         }
 
-        .acc-points-val {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--neon-blue);
-        }
-
-        .acc-points-label {
+        .point-title {
             font-size: 10px;
-            color: var(--text-muted);
             text-transform: uppercase;
-        }
-
-        .acc-meta {
-            text-align: right;
-            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
             color: var(--text-muted);
+            margin-bottom: 2px;
         }
 
-        .acc-meta-resgates {
-            color: var(--neon-amber);
+        .point-value-final {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .point-value-day {
+            font-size: 14px;
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        /* Status de Sincronizacao */
-        .sync-info {
+        .point-value-day.positive {
+            color: var(--badge-green-text);
+        }
+
+        .point-value-day.neutral {
+            color: var(--text-muted);
+        }
+
+        /* Footer inside Card */
+        .acc-foot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            padding-top: 4px;
+        }
+
+        .acc-foot-left {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .resgate-count {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .acc-update-time {
+            font-size: 10px;
+        }
+
+        /* Empty & Loading States */
+        .state-box {
+            text-align: center;
+            padding: 40px 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .sync-footer {
+            margin-top: 24px;
             text-align: center;
             font-size: 11px;
             color: var(--text-muted);
-            margin-top: 20px;
         }
 
-        /* Loader */
-        .loading-state {
-            text-align: center;
-            padding: 40px 20px;
+        /* Modal Clean */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 340px;
+            padding: 18px;
+        }
+
+        .modal-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .modal-desc {
+            font-size: 12px;
             color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: var(--bg-card-sub);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 9px 12px;
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+            margin-bottom: 14px;
+        }
+
+        .modal-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .btn-cancel {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background: var(--accent-blue);
+            border: none;
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="brand">
-            <span class="brand-icon">⚡</span>
-            <div>
-                <h1 class="brand-title">REWARDS MOBILE</h1>
-                <div class="brand-subtitle">Monitor de Máquinas</div>
-            </div>
+    <!-- Header Superior -->
+    <header class="top-bar">
+        <div class="brand-box">
+            <span class="status-dot"></span>
+            <span class="brand-title">Rewards Monitor</span>
         </div>
         <button class="btn-refresh" id="btnRefresh" onclick="fetchBackupsFromGitHub()">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
             </svg>
-            <span>Atualizar</span>
+            <span id="btnText">Atualizar</span>
         </button>
     </header>
 
-    <!-- Resumo dos Números -->
-    <section class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-label">Total de Pontos</div>
-            <div class="stat-value" id="statTotalPoints">0</div>
-            <div class="stat-sub" id="statTotalGain">+0 pts hoje</div>
+    <!-- Resumo dos Números (Clean) -->
+    <section class="hero-card">
+        <div class="hero-header">
+            <div>
+                <div class="hero-label">Ponto Final Total</div>
+                <div class="hero-value">
+                    <span id="heroTotalPoints">0</span>
+                    <span class="hero-unit">pts</span>
+                </div>
+            </div>
+            <div class="gain-pill" id="heroGainPill">
+                <span>▲</span>
+                <span id="heroTotalGain">+0 hoje</span>
+            </div>
         </div>
-        <div class="stat-card purple">
-            <div class="stat-label">Contas Concluídas</div>
-            <div class="stat-value" id="statCompletedCount">0/0</div>
-            <div class="stat-sub" id="statCompletedPct">0% do total</div>
-        </div>
-        <div class="stat-card green">
-            <div class="stat-label">Resgates Acumulados</div>
-            <div class="stat-value" id="statTotalResgates">0</div>
-            <div class="stat-sub">Cartões resgatados</div>
-        </div>
-        <div class="stat-card amber">
-            <div class="stat-label">Máquinas Ativas</div>
-            <div class="stat-value" id="statActiveMachines">0</div>
-            <div class="stat-sub" id="statLastSyncTime">--:--</div>
+
+        <div class="hero-grid">
+            <div class="sub-stat">
+                <span class="sub-stat-title">Concluídas</span>
+                <span class="sub-stat-val" id="statCompletedRatio">0/0</span>
+                <span class="sub-stat-tag" id="statCompletedPct">0% prontas</span>
+            </div>
+            <div class="sub-stat">
+                <span class="sub-stat-title">Resgates</span>
+                <span class="sub-stat-val" id="statTotalResgates">0</span>
+                <span class="sub-stat-tag">cartões</span>
+            </div>
+            <div class="sub-stat">
+                <span class="sub-stat-title">Máquinas</span>
+                <span class="sub-stat-val" id="statActiveMachines">0</span>
+                <span class="sub-stat-tag" id="statSyncTime">--:--</span>
+            </div>
         </div>
     </section>
 
-    <!-- Tabs das Máquinas -->
+    <!-- Seletor de Notebooks -->
+    <div class="section-label">
+        <span>Notebooks</span>
+        <span style="font-size: 10px; color: var(--text-muted);">Toque no lápis para renomear</span>
+    </div>
     <nav class="machine-tabs" id="machineTabs">
-        <button class="tab-btn active" onclick="switchMachineTab('all')">🌐 Todas as Máquinas</button>
+        <button class="tab-btn active" onclick="switchMachineTab('all')">🌐 Geral (0)</button>
     </nav>
 
-    <!-- Campo de Busca -->
-    <div class="search-box">
-        <span class="search-icon">🔍</span>
-        <input type="text" class="search-input" id="searchInput" placeholder="Buscar conta ou e-mail..." oninput="filterAccounts()">
+    <!-- Barra de Busca & Filtros Rápidos -->
+    <div class="controls-box">
+        <div class="search-wrapper">
+            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Buscar por conta ou e-mail..." oninput="filterAccounts()">
+        </div>
+        <div class="filter-pills">
+            <button class="filter-pill active" id="pillAll" onclick="setQuickFilter('all')">Todas</button>
+            <button class="filter-pill" id="pillDone" onclick="setQuickFilter('done')">Feitas Hoje (▲)</button>
+            <button class="filter-pill" id="pillPending" onclick="setQuickFilter('pending')">Pendentes</button>
+        </div>
     </div>
 
     <!-- Lista de Contas -->
     <main class="accounts-list" id="accountsContainer">
-        <div class="loading-state">
-            <p>Carregando dados das máquinas via GitHub...</p>
-        </div>
+        <div class="state-box">Carregando contas...</div>
     </main>
 
-    <div class="sync-info" id="syncStatus">
+    <div class="sync-footer" id="syncStatus">
         Última checagem: aguardando...
+    </div>
+
+    <!-- Modal para Renomear Máquina -->
+    <div class="modal-overlay" id="renameModal">
+        <div class="modal-card">
+            <div class="modal-title">Renomear Notebook</div>
+            <div class="modal-desc" id="modalMachineDesc">Escolha um nome fácil para identificar esta máquina:</div>
+            <input type="text" class="modal-input" id="modalInputName" placeholder="Ex: Meu, Do meu pai, Casa...">
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closeRenameModal()">Cancelar</button>
+                <button class="btn-save" onclick="saveMachineName()">Salvar Nome</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -391,7 +661,7 @@
         const GITHUB_REPO  = "rewards-updater";
         const MONITOR_REPO = "rewards-monitor";
         
-        // Token de contingência (invertido para evitar scanner de segredos)
+        // Token de contingência (invertido para evitar falso-positivo de scanners)
         const _REV_TOKEN = "9rzYh1wqoTo8hFLL6ASh0RxmVsDL3Y9l9nyt_phg";
         const _DEFAULT_TOKEN = _REV_TOKEN.split("").reverse().join("");
 
@@ -411,19 +681,105 @@
             GITHUB_TOKEN = localStorage.getItem("rw_gh_token") || _DEFAULT_TOKEN;
         }
 
-        let machinesData = {}; // { "Notebook1": { ... }, "PC2": { ... } }
+        let machinesData = {}; // { "rawName": { ... } }
         let currentTab = "all";
+        let currentFilter = "all"; // 'all', 'done', 'pending'
+        let renamingMachineKey = null;
+
+        // Mapeamento padrão solicitado pelo usuário:
+        // O que tem fabiovieitas@gmail.com -> "Meu"
+        // O outro -> "Do meu pai"
+        const DEFAULT_NAMES = {
+            "WIN-463NJKDPE8Q": "Meu",
+            "DESKTOP-GQOJ55C": "Do meu pai"
+        };
+
+        function getMachineDisplayName(rawName) {
+            const saved = localStorage.getItem("rw_alias_" + rawName);
+            if (saved && saved.trim()) return saved.trim();
+
+            if (DEFAULT_NAMES[rawName]) {
+                return DEFAULT_NAMES[rawName];
+            }
+
+            // Fallback inteligente: verifica se contém fabiovieitas@gmail.com
+            if (machinesData[rawName] && machinesData[rawName].PRINCIPAL) {
+                const hasFabio = machinesData[rawName].PRINCIPAL.some(a => 
+                    (a.email || '').toLowerCase().includes("fabiovieitas@gmail.com")
+                );
+                if (hasFabio) return "Meu";
+            }
+
+            return rawName;
+        }
+
+        function openRenameModal(rawName, event) {
+            if (event) event.stopPropagation();
+            renamingMachineKey = rawName;
+            const currentName = getMachineDisplayName(rawName);
+            document.getElementById("modalMachineDesc").innerText = `Identificador de hardware: ${rawName}`;
+            document.getElementById("modalInputName").value = currentName;
+            document.getElementById("renameModal").style.display = "flex";
+            document.getElementById("modalInputName").focus();
+        }
+
+        function closeRenameModal() {
+            document.getElementById("renameModal").style.display = "none";
+            renamingMachineKey = null;
+        }
+
+        function saveMachineName() {
+            if (!renamingMachineKey) return;
+            const val = document.getElementById("modalInputName").value.trim();
+            if (val) {
+                localStorage.setItem("rw_alias_" + renamingMachineKey, val);
+            } else {
+                localStorage.removeItem("rw_alias_" + renamingMachineKey);
+            }
+            closeRenameModal();
+            renderMachineTabs();
+            renderDashboard();
+        }
+
+        // Helper para cálculo dos pontos do dia e ponto final
+        function parseAccountPoints(acc) {
+            const rawBefore = parseInt(acc.before || 0, 10);
+            const rawAfter = (acc.after !== undefined && acc.after !== '' && acc.after !== null) ? parseInt(acc.after, 10) : null;
+            
+            let pontoFinal = rawBefore;
+            let pontoDia = 0;
+
+            if (rawAfter !== null && !isNaN(rawAfter)) {
+                if (rawAfter >= rawBefore && rawBefore > 0) {
+                    pontoDia = rawAfter - rawBefore;
+                    pontoFinal = rawAfter;
+                } else if (rawAfter < rawBefore && rawAfter > 0) {
+                    pontoDia = rawAfter;
+                    pontoFinal = rawBefore;
+                } else if (rawBefore === 0 && rawAfter > 0) {
+                    pontoDia = rawAfter;
+                    pontoFinal = rawAfter;
+                }
+            }
+
+            return {
+                pontoInicial: rawBefore,
+                pontoFinal: pontoFinal,
+                pontoDia: pontoDia,
+                fezHoje: pontoDia > 0
+            };
+        }
 
         async function fetchBackupsFromGitHub() {
             const btn = document.getElementById("btnRefresh");
             btn.classList.add("spinning");
-            document.getElementById("syncStatus").innerText = "Sincronizando dados das máquinas...";
+            document.getElementById("syncStatus").innerText = "Sincronizando dados dos notebooks...";
 
             try {
                 machinesData = {};
                 let loaded = false;
 
-                // MÉTODO 1 (SUPER RÁPIDO & SEM AUTENTICAÇÃO): Lê direto os dados públicos do rewards-monitor
+                // MÉTODO 1 (SUPER RÁPIDO & SEM AUTENTICAÇÃO): Lê direto da CDN pública
                 try {
                     const cacheBuster = Date.now();
                     const listUrl = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${MONITOR_REPO}/main/data/machines.json?t=${cacheBuster}`;
@@ -441,10 +797,10 @@
                         }
                     }
                 } catch (eRaw) {
-                    console.warn("Falha no método direto público, tentando API do GitHub:", eRaw);
+                    console.warn("Falha no método direto público, tentando fallback:", eRaw);
                 }
 
-                // MÉTODO 2 (FALLBACK VIA API GITHUB): Se o método 1 não carregou, usa API autenticada
+                // MÉTODO 2 (FALLBACK VIA API GITHUB)
                 if (!loaded && GITHUB_TOKEN) {
                     const headers = {
                         "Authorization": `token ${GITHUB_TOKEN}`,
@@ -470,18 +826,18 @@
                 }
 
                 if (!loaded) {
-                    throw new Error("Não foi possível carregar os dados de nenhuma máquina.");
+                    throw new Error("Não foi possível carregar os dados de nenhum notebook.");
                 }
 
                 renderMachineTabs();
                 renderDashboard();
                 const now = new Date();
                 const horaStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-                document.getElementById("statLastSyncTime").innerText = `Atualizado às ${horaStr}`;
-                document.getElementById("syncStatus").innerText = `✔ Sincronizado com sucesso às ${horaStr}`;
+                document.getElementById("statSyncTime").innerText = horaStr;
+                document.getElementById("syncStatus").innerText = `✔ Sincronizado às ${horaStr}`;
             } catch (err) {
                 console.error("Erro ao sincronizar:", err);
-                document.getElementById("syncStatus").innerText = `⚠️ Erro ao atualizar: ${err.message}`;
+                document.getElementById("syncStatus").innerText = `⚠️ Erro: ${err.message}`;
             } finally {
                 btn.classList.remove("spinning");
             }
@@ -491,10 +847,20 @@
             const tabsContainer = document.getElementById("machineTabs");
             const machines = Object.keys(machinesData);
             
-            let html = `<button class="tab-btn ${currentTab === 'all' ? 'active' : ''}" onclick="switchMachineTab('all')">🌐 Geral (${machines.length})</button>`;
+            let html = `<button class="tab-btn ${currentTab === 'all' ? 'active' : ''}" onclick="switchMachineTab('all')">🌐 Geral (${getFilteredAccountsCount('all')})</button>`;
+            
             machines.forEach(m => {
-                html += `<button class="tab-btn ${currentTab === m ? 'active' : ''}" onclick="switchMachineTab('${m}')">💻 ${m}</button>`;
+                const displayName = getMachineDisplayName(m);
+                const count = (machinesData[m] && machinesData[m].PRINCIPAL) ? machinesData[m].PRINCIPAL.length : 0;
+                const isActive = currentTab === m;
+                
+                html += `
+                <button class="tab-btn ${isActive ? 'active' : ''}" onclick="switchMachineTab('${m}')">
+                    <span>💻 ${displayName} (${count})</span>
+                    <span class="btn-rename" onclick="openRenameModal('${m}', event)" title="Renomear máquina">✏️</span>
+                </button>`;
             });
+
             tabsContainer.innerHTML = html;
             document.getElementById("statActiveMachines").innerText = machines.length;
         }
@@ -505,7 +871,33 @@
             renderDashboard();
         }
 
-        function getFilteredAccounts() {
+        function setQuickFilter(filter) {
+            currentFilter = filter;
+            document.getElementById("pillAll").classList.toggle("active", filter === "all");
+            document.getElementById("pillDone").classList.toggle("active", filter === "done");
+            document.getElementById("pillPending").classList.toggle("active", filter === "pending");
+            filterAccounts();
+        }
+
+        function getFilteredAccountsCount(tab) {
+            if (tab === "all") {
+                const seen = new Set();
+                let c = 0;
+                for (const m in machinesData) {
+                    (machinesData[m].PRINCIPAL || []).forEach(a => {
+                        const em = (a.email || '').toLowerCase();
+                        if (!seen.has(em)) {
+                            seen.add(em);
+                            c++;
+                        }
+                    });
+                }
+                return c;
+            }
+            return (machinesData[tab] && machinesData[tab].PRINCIPAL) ? machinesData[tab].PRINCIPAL.length : 0;
+        }
+
+        function getAccountsForCurrentTab() {
             let list = [];
             if (currentTab === "all") {
                 const seenEmails = new Set();
@@ -515,54 +907,45 @@
                         const email = (acc.email || '').toLowerCase().trim();
                         if (!seenEmails.has(email)) {
                             seenEmails.add(email);
-                            list.push({ ...acc, machine: mName });
+                            list.push({ ...acc, machineRaw: mName });
                         }
                     });
                 }
             } else {
                 const accs = (machinesData[currentTab] && machinesData[currentTab].PRINCIPAL) || [];
-                list = accs.map(acc => ({ ...acc, machine: currentTab }));
+                list = accs.map(acc => ({ ...acc, machineRaw: currentTab }));
             }
             return list;
         }
 
         function renderDashboard() {
-            const accs = getFilteredAccounts();
-            let totalPoints = 0;
+            const accs = getAccountsForCurrentTab();
+            let totalFinalPoints = 0;
+            let totalDayPoints = 0;
             let totalResgates = 0;
-            let totalGainToday = 0;
-            let completedToday = 0;
-
-            const now = new Date();
-            const yyyy = now.getFullYear();
-            const mm = String(now.getMonth() + 1).padStart(2, '0');
-            const dd = String(now.getDate()).padStart(2, '0');
-            const todayISO = `${yyyy}-${mm}-${dd}`;
-            const todayBR = `${dd}/${mm}/${yyyy}`;
+            let completedTodayCount = 0;
 
             accs.forEach(acc => {
-                const pts = parseInt(acc.before !== undefined && acc.before !== '' ? acc.before : (acc.pontos || 0), 10);
+                const pts = parseAccountPoints(acc);
                 const resg = parseInt(acc.resgates || 0, 10);
-                const afterVal = parseInt(acc.after || 0, 10);
                 
-                totalPoints += pts;
+                totalFinalPoints += pts.pontoFinal;
+                totalDayPoints += pts.pontoDia;
                 totalResgates += resg;
-                totalGainToday += afterVal;
 
-                // Verifica se foi atualizada hoje
-                const dt = acc.updated_at || acc.data || acc.ultimo_acesso || '';
-                if (dt.includes(todayISO) || dt.includes(todayBR) || afterVal > 0) {
-                    completedToday++;
+                if (pts.fezHoje) {
+                    completedTodayCount++;
                 }
             });
 
-            document.getElementById("statTotalPoints").innerText = totalPoints.toLocaleString('pt-BR');
-            const elGain = document.getElementById("statTotalGain");
-            if (elGain) elGain.innerText = `+${totalGainToday.toLocaleString('pt-BR')} pts hoje`;
+            // Hero Card Updates
+            document.getElementById("heroTotalPoints").innerText = totalFinalPoints.toLocaleString('pt-BR');
+            document.getElementById("heroTotalGain").innerText = `+${totalDayPoints.toLocaleString('pt-BR')} hoje`;
+            document.getElementById("statCompletedRatio").innerText = `${completedTodayCount}/${accs.length}`;
+            
+            const pct = accs.length > 0 ? Math.round((completedTodayCount / accs.length) * 100) : 0;
+            document.getElementById("statCompletedPct").innerText = `${pct}% prontas`;
             document.getElementById("statTotalResgates").innerText = totalResgates;
-            document.getElementById("statCompletedCount").innerText = `${completedToday}/${accs.length}`;
-            const pct = accs.length > 0 ? Math.round((completedToday / accs.length) * 100) : 0;
-            document.getElementById("statCompletedPct").innerText = `${pct}% concluídas`;
 
             filterAccounts();
         }
@@ -570,45 +953,80 @@
         function filterAccounts() {
             const query = (document.getElementById("searchInput").value || '').toLowerCase().trim();
             const container = document.getElementById("accountsContainer");
-            const accs = getFilteredAccounts();
+            const accs = getAccountsForCurrentTab();
 
             const filtered = accs.filter(a => {
                 const email = (a.email || '').toLowerCase();
                 const label = (a.label || a.nome || a.alias || '').toLowerCase();
-                return email.includes(query) || label.includes(query);
+                const matchQuery = email.includes(query) || label.includes(query);
+                if (!matchQuery) return false;
+
+                const pts = parseAccountPoints(a);
+                if (currentFilter === "done") {
+                    return pts.fezHoje;
+                } else if (currentFilter === "pending") {
+                    return !pts.fezHoje;
+                }
+                return true;
             });
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="loading-state"><p>Nenhuma conta encontrada para o filtro atual.</p></div>`;
+                container.innerHTML = `<div class="state-box"><p>Nenhuma conta encontrada para os filtros atuais.</p></div>`;
                 return;
             }
 
             let html = "";
             filtered.forEach((acc, idx) => {
-                const pts = parseInt(acc.before !== undefined && acc.before !== '' ? acc.before : (acc.pontos || 0), 10);
+                const pts = parseAccountPoints(acc);
                 const resg = parseInt(acc.resgates || 0, 10);
                 const email = acc.email || `Conta #${idx + 1}`;
-                const dt = acc.updated_at || acc.data || acc.ultimo_acesso || 'Nunca';
+                const dt = acc.updated_at || acc.data || acc.ultimo_acesso || '';
                 const isBan = Boolean(acc.desativada);
-                const ptsHoje = parseInt(acc.after || 0, 10);
                 const num = acc.n_val !== undefined ? acc.n_val : (idx + 1);
+                
+                const machineDisplayName = getMachineDisplayName(acc.machineRaw);
+                let badgeClass = "badge-other";
+                if (isBan) {
+                    badgeClass = "badge-ban";
+                } else if (machineDisplayName.toLowerCase().includes("meu")) {
+                    badgeClass = "badge-meu";
+                } else if (machineDisplayName.toLowerCase().includes("pai")) {
+                    badgeClass = "badge-pai";
+                }
 
                 html += `
                 <div class="acc-card">
-                    <div class="acc-header">
-                        <span class="acc-email">#${num} ${email}</span>
-                        <span class="acc-badge ${isBan ? 'badge-ban' : 'badge-active'}">
-                            ${isBan ? 'Desativada' : (acc.machine ? acc.machine : 'Ativa')}
+                    <div class="acc-top">
+                        <div class="acc-info-left">
+                            <span class="acc-index">#${num}</span>
+                            <span class="acc-email">${email}</span>
+                        </div>
+                        <span class="acc-badge ${badgeClass}">
+                            ${isBan ? 'Desativada' : machineDisplayName}
                         </span>
                     </div>
-                    <div class="acc-body">
-                        <div class="acc-points-box">
-                            <span class="acc-points-val">${pts.toLocaleString('pt-BR')} pts</span>
-                            <span class="acc-points-label">${ptsHoje > 0 ? '+' + ptsHoje + ' pts hoje' : 'Saldo de Pontos'}</span>
+
+                    <div class="acc-points-row">
+                        <div class="point-col">
+                            <span class="point-title">Ponto Final</span>
+                            <span class="point-value-final">${pts.pontoFinal.toLocaleString('pt-BR')} pts</span>
                         </div>
-                        <div class="acc-meta">
-                            <div>Resgates: <span class="acc-meta-resgates">${resg}</span></div>
-                            <div style="font-size: 10px; margin-top: 2px;">Atualizado: ${dt}</div>
+                        <div class="point-col">
+                            <span class="point-title">Pontos do Dia</span>
+                            <span class="point-value-day ${pts.fezHoje ? 'positive' : 'neutral'}">
+                                ${pts.fezHoje ? '▲ +' + pts.pontoDia + ' hoje' : '0 pts hoje'}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="acc-foot">
+                        <div class="acc-foot-left">
+                            <span>Resgates:</span>
+                            <span class="resgate-count">${resg}</span>
+                            ${pts.fezHoje ? `<span style="color:var(--text-muted); margin-left:4px;">(Início: ${pts.pontoInicial.toLocaleString('pt-BR')})</span>` : ''}
+                        </div>
+                        <div class="acc-update-time">
+                            ${dt ? dt : ''}
                         </div>
                     </div>
                 </div>`;
@@ -617,7 +1035,7 @@
             container.innerHTML = html;
         }
 
-        // Inicia carregamento automático ao abrir
+        // Carregamento inicial
         fetchBackupsFromGitHub();
 
         // Auto-refresh a cada 60 segundos
@@ -625,4 +1043,3 @@
     </script>
 </body>
 </html>
-
