@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Rewards Monitor Mobile</title>
+    <meta name="theme-color" content="#0b0f19">
+    <style>
+        :root {
+            --bg-dark: #0b0f19;
+            --card-bg: #131b2e;
+            --card-border: #1e293b;
+            --neon-blue: #38bdf8;
+            --neon-purple: #a855f7;
+            --neon-green: #22c55e;
+            --neon-amber: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 16px;
+            padding-bottom: 40px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--card-border);
+            margin-bottom: 16px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            font-size: 26px;
+            filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #38bdf8 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-refresh {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--neon-blue);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-refresh:active {
+            transform: scale(0.95);
+            background: rgba(56, 189, 248, 0.2);
+        }
+
+        .btn-refresh.spinning svg {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Resumo Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--neon-blue);
+        }
+
+        .stat-card.purple::before { background: var(--neon-purple); }
+        .stat-card.green::before { background: var(--neon-green); }
+        .stat-card.amber::before { background: var(--neon-amber); }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .stat-sub {
+            font-size: 11px;
+            color: var(--neon-green);
+            font-weight: 600;
+        }
+
+        /* Tabs das Máquinas */
+        .machine-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+            scrollbar-width: none;
+        }
+
+        .machine-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+        }
+
+        /* Barra de Busca */
+        .search-box {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 14px 12px 38px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--neon-blue);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        /* Lista de Contas */
+        .accounts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .acc-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: border-color 0.2s;
+        }
+
+        .acc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .acc-email {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            max-width: 210px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .acc-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-active {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--neon-green);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .badge-ban {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .acc-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .acc-points-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .acc-points-val {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--neon-blue);
+        }
+
+        .acc-points-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .acc-meta {
+            text-align: right;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .acc-meta-resgates {
+            color: var(--neon-amber);
+            font-weight: 700;
+        }
+
+        /* Status de Sincronizacao */
+        .sync-info {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 20px;
+        }
+
+        /* Loader */
+        .loading-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <span class="brand-icon">⚡</span>
+            <div>
+                <h1 class="brand-title">REWARDS MOBILE</h1>
+                <div class="brand-subtitle">Monitor de Máquinas</div>
+            </div>
+        </div>
+        <button class="btn-refresh" id="btnRefresh" onclick="fetchBackupsFromGitHub()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            <span>Atualizar</span>
+        </button>
+    </header>
+
+    <!-- Resumo dos Números -->
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-label">Total de Pontos</div>
+            <div class="stat-value" id="statTotalPoints">0</div>
+            <div class="stat-sub" id="statTotalGain">+0 pts hoje</div>
+        </div>
+        <div class="stat-card purple">
+            <div class="stat-label">Contas Concluídas</div>
+            <div class="stat-value" id="statCompletedCount">0/0</div>
+            <div class="stat-sub" id="statCompletedPct">0% do total</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-label">Resgates Acumulados</div>
+            <div class="stat-value" id="statTotalResgates">0</div>
+            <div class="stat-sub">Cartões resgatados</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-label">Máquinas Ativas</div>
+            <div class="stat-value" id="statActiveMachines">0</div>
+            <div class="stat-sub" id="statLastSyncTime">--:--</div>
+        </div>
+    </section>
+
+    <!-- Tabs das Máquinas -->
+    <nav class="machine-tabs" id="machineTabs">
+        <button class="tab-btn active" onclick="switchMachineTab('all')">🌐 Todas as Máquinas</button>
+    </nav>
+
+    <!-- Campo de Busca -->
+    <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Buscar conta ou e-mail..." oninput="filterAccounts()">
+    </div>
+
+    <!-- Lista de Contas -->
+    <main class="accounts-list" id="accountsContainer">
+        <div class="loading-state">
+            <p>Carregando dados das máquinas via GitHub...</p>
+        </div>
+    </main>
+
+    <div class="sync-info" id="syncStatus">
+        Última checagem: aguardando...
+    </div>
+
+    <script>
+        const GITHUB_OWNER = "fabiovieitas";
+        const GITHUB_REPO  = "rewards-updater";
+                let GITHUB_TOKEN = "";
+        const hashParams = new URLSearchParams(window.location.hash.substring(1));
+        if (hashParams.get("k")) {
+            GITHUB_TOKEN = hashParams.get("k");
+            localStorage.setItem("rw_gh_token", GITHUB_TOKEN);
+            window.history.replaceState(null, null, window.location.pathname);
+        } else {
+            GITHUB_TOKEN = localStorage.getItem("rw_gh_token") || "";
+        }
+
+        let machinesData = {}; // { "Notebook1": { ... }, "PC2": { ... } }
+        let currentTab = "all";
+
+        async function fetchBackupsFromGitHub() {
+            const btn = document.getElementById("btnRefresh");
+            btn.classList.add("spinning");
+            document.getElementById("syncStatus").innerText = "Sincronizando com GitHub...";
+
+            try {
+                const headers = {
+                    "Authorization": `token ${GITHUB_TOKEN}`,
+                    "Accept": "application/vnd.github.v3+json"
+                };
+
+                // 1. Lista arquivos na pasta backups
+                const listUrl = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/backups`;
+                const listResp = await fetch(listUrl, { headers });
+                if (!listResp.ok) throw new Error(`HTTP ${listResp.status} ao listar backups`);
+                const files = await listResp.json();
+
+                machinesData = {};
+                for (const file of files) {
+                    if (file.name.startsWith("pontos_db_") && file.name.endsWith(".json")) {
+                        const mName = file.name.replace("pontos_db_", "").replace(".json", "");
+                        
+                        // Baixa conteúdo do arquivo
+                        const fileResp = await fetch(file.download_url);
+                        if (fileResp.ok) {
+                            const dbJson = await fileResp.json();
+                            machinesData[mName] = dbJson;
+                        }
+                    }
+                }
+
+                renderMachineTabs();
+                renderDashboard();
+                const now = new Date();
+                const horaStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                document.getElementById("statLastSyncTime").innerText = `Atualizado às ${horaStr}`;
+                document.getElementById("syncStatus").innerText = `✔ Sincronizado com sucesso às ${horaStr}`;
+            } catch (err) {
+                console.error("Erro ao sincronizar:", err);
+                document.getElementById("syncStatus").innerText = `⚠️ Erro ao atualizar: ${err.message}`;
+            } finally {
+                btn.classList.remove("spinning");
+            }
+        }
+
+        function renderMachineTabs() {
+            const tabsContainer = document.getElementById("machineTabs");
+            const machines = Object.keys(machinesData);
+            
+            let html = `<button class="tab-btn ${currentTab === 'all' ? 'active' : ''}" onclick="switchMachineTab('all')">🌐 Geral (${machines.length})</button>`;
+            machines.forEach(m => {
+                html += `<button class="tab-btn ${currentTab === m ? 'active' : ''}" onclick="switchMachineTab('${m}')">💻 ${m}</button>`;
+            });
+            tabsContainer.innerHTML = html;
+            document.getElementById("statActiveMachines").innerText = machines.length;
+        }
+
+        function switchMachineTab(tab) {
+            currentTab = tab;
+            renderMachineTabs();
+            renderDashboard();
+        }
+
+        function getFilteredAccounts() {
+            let list = [];
+            if (currentTab === "all") {
+                const seenEmails = new Set();
+                for (const mName in machinesData) {
+                    const accs = machinesData[mName].PRINCIPAL || [];
+                    accs.forEach(acc => {
+                        const email = (acc.email || '').toLowerCase().trim();
+                        if (!seenEmails.has(email)) {
+                            seenEmails.add(email);
+                            list.push({ ...acc, machine: mName });
+                        }
+                    });
+                }
+            } else {
+                const accs = (machinesData[currentTab] && machinesData[currentTab].PRINCIPAL) || [];
+                list = accs.map(acc => ({ ...acc, machine: currentTab }));
+            }
+            return list;
+        }
+
+        function renderDashboard() {
+            const accs = getFilteredAccounts();
+            let totalPoints = 0;
+            let totalResgates = 0;
+            let completedToday = 0;
+
+            const todayStr = new Date().toLocaleDateString('pt-BR');
+
+            accs.forEach(acc => {
+                const pts = parseInt(acc.pontos || 0, 10);
+                const resg = parseInt(acc.resgates || 0, 10);
+                totalPoints += pts;
+                totalResgates += resg;
+
+                // Verifica se foi atualizada hoje
+                const dt = acc.data || acc.ultimo_acesso || '';
+                if (dt.includes(todayStr) || (pts > 0 && acc.pontos_ontem && pts > acc.pontos_ontem)) {
+                    completedToday++;
+                }
+            });
+
+            document.getElementById("statTotalPoints").innerText = totalPoints.toLocaleString('pt-BR');
+            document.getElementById("statTotalResgates").innerText = totalResgates;
+            document.getElementById("statCompletedCount").innerText = `${completedToday}/${accs.length}`;
+            const pct = accs.length > 0 ? Math.round((completedToday / accs.length) * 100) : 0;
+            document.getElementById("statCompletedPct").innerText = `${pct}% concluídas`;
+
+            filterAccounts();
+        }
+
+        function filterAccounts() {
+            const query = (document.getElementById("searchInput").value || '').toLowerCase().trim();
+            const container = document.getElementById("accountsContainer");
+            const accs = getFilteredAccounts();
+
+            const filtered = accs.filter(a => {
+                const email = (a.email || '').toLowerCase();
+                const label = (a.label || a.nome || '').toLowerCase();
+                return email.includes(query) || label.includes(query);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="loading-state"><p>Nenhuma conta encontrada para o filtro atual.</p></div>`;
+                return;
+            }
+
+            let html = "";
+            filtered.forEach((acc, idx) => {
+                const pts = parseInt(acc.pontos || 0, 10);
+                const resg = parseInt(acc.resgates || 0, 10);
+                const email = acc.email || `Conta #${idx + 1}`;
+                const dt = acc.data || acc.ultimo_acesso || 'Nunca';
+                const isBan = acc.desativada || false;
+
+                html += `
+                <div class="acc-card">
+                    <div class="acc-header">
+                        <span class="acc-email">${idx + 1}. ${email}</span>
+                        <span class="acc-badge ${isBan ? 'badge-ban' : 'badge-active'}">
+                            ${isBan ? 'Desativada' : (acc.machine ? acc.machine : 'Ativa')}
+                        </span>
+                    </div>
+                    <div class="acc-body">
+                        <div class="acc-points-box">
+                            <span class="acc-points-val">${pts.toLocaleString('pt-BR')} pts</span>
+                            <span class="acc-points-label">Saldo Atual</span>
+                        </div>
+                        <div class="acc-meta">
+                            <div>Resgates: <span class="acc-meta-resgates">${resg}</span></div>
+                            <div style="font-size: 10px; margin-top: 2px;">Atualizado: ${dt}</div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Inicia carregamento automático ao abrir
+        fetchBackupsFromGitHub();
+
+        // Auto-refresh a cada 60 segundos
+        setInterval(fetchBackupsFromGitHub, 60000);
+    </script>
+</body>
+</html>
+
