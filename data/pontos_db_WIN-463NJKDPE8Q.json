@@ -2845,7 +2845,7 @@
           1931
         ]
       ],
-      "desativada": false,
+      "desativada": true,
       "resgate_em_andamento": false,
       "resgate_pendente_gift": "",
       "resgate_pendente_valor": "",
@@ -2954,7 +2954,7 @@
           1933
         ]
       ],
-      "desativada": false,
+      "desativada": true,
       "orders_history": [
         {
           "title": "Cartão-presente da Microsoft Store no XBOX de R$ 5",
@@ -3049,7 +3049,7 @@
           1707
         ]
       ],
-      "desativada": false,
+      "desativada": true,
       "orders_history": [
         {
           "title": "Cartão-presente da Microsoft Store no XBOX de R$ 5",
@@ -3140,7 +3140,7 @@
           2716
         ]
       ],
-      "desativada": false
+      "desativada": true
     },
     {
       "n_val": 36,
@@ -3200,7 +3200,7 @@
           2839
         ]
       ],
-      "desativada": false
+      "desativada": true
     },
     {
       "n_val": 37,
