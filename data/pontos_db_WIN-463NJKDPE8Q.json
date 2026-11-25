@@ -263,14 +263,14 @@
           8287
         ]
       ],
-      "resgate_em_andamento": false,
-      "desativada": true,
+      "resgate_em_andamento": true,
+      "desativada": false,
       "observacoes": "",
-      "resgate_pendente_gift": "",
-      "resgate_pendente_valor": "",
-      "resgate_pendente_data": "",
+      "resgate_pendente_gift": "Netshoes",
+      "resgate_pendente_valor": "30",
+      "resgate_pendente_data": "24/11/2026 08:49",
       "resgate_pendente_notas": "",
-      "resgate_pendente_info": ""
+      "resgate_pendente_info": "[Netshoes] R$ 30 24/11/2026 08:49"
     },
     {
       "n_val": 3,
