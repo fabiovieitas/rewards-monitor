@@ -264,7 +264,7 @@
         ]
       ],
       "resgate_em_andamento": true,
-      "desativada": false,
+      "desativada": true,
       "observacoes": "",
       "resgate_pendente_gift": "Netshoes",
       "resgate_pendente_valor": "30",
